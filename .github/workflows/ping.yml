@@ -1,0 +1,30 @@
+name: Ping
+
+# Public repo on purpose: GitHub runs scheduled jobs on time here, while
+# private repos get throttled to a few runs a day. This repo holds only
+# public web addresses. Nothing secret lives here.
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch: {}
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      # Marketing's clock: posts due on Instagram, results pulled back, Meta login kept fresh.
+      - name: Tick Glow Marketing
+        run: curl -fsS -m 90 https://marketing.theglowcommand.com/api/cron/tick || true
+      # Keep the apps and their databases warm.
+      - name: Ping Glow Marketing
+        run: curl -fsS -m 20 https://marketing.theglowcommand.com/api/health || true
+      - name: Ping Glow Cash
+        run: curl -fsS -m 20 https://cash.theglowcommand.com/api/health || true
+      - name: Ping Glow Deliveries
+        run: curl -fsS -m 20 https://deliveries.theglowcommand.com/api/health || true
+      - name: Ping Glow Showroom
+        run: curl -fsS -m 20 https://showroom.theglowcommand.com/api/health || true
+      - name: Ping Glow Influencers
+        run: curl -fsS -m 20 https://influencers.theglowcommand.com/api/health || true
